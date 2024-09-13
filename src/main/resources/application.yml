@@ -1,6 +1,14 @@
 spring:
   application:
     name: 论坛系统 # 项目名称
+  # 配置数据源
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/forum_db?characterEncoding=utf8&useSSL=false
+    # 数据库连接串
+    username: root # 数据库⽤⼾名
+    password: 1234 # 数据库密码
+    driver-class-name: com.mysql.cj.jdbc.Driver # 数据库连接驱动
+    type: com.alibaba.druid.pool.DruidDataSource # 数据源改为druid
   output:
     ansi:
       enabled: ALWAYS # 配置日志彩色输出
@@ -16,3 +24,7 @@ logging:
     com.yun.forum: debug # 指定目录下的日志级别
   file:
     path: F:/log/forum # 日志保存的地址
+
+# mybatis 相关配置，单独配置
+mybatis:
+  mapper-locations: classpath:mapper/**/*.xml # 指定 xxxMapper.xml的扫描路径
