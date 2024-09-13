@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: 论坛系统 # 项目名称
+  output:
+    ansi:
+      enabled: ALWAYS # 配置日志彩色输出
+server:
+  port: 58080 # 指定服务器端口号
+
+# 日志配置
+logging:
+  pattern:
+    dateformat: MM-dd HH:mm:ss # 日期格式
+  level:
+    root: info # 默认日志的级别
+    com.yun.forum: debug # 指定目录下的日志级别
+  file:
+    path: F:/log/forum # 日志保存的地址
