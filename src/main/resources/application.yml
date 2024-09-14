@@ -12,6 +12,7 @@ spring:
   output:
     ansi:
       enabled: ALWAYS # 配置日志彩色输出
+
 server:
   port: 58080 # 指定服务器端口号
 
