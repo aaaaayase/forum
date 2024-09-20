@@ -6,6 +6,7 @@ import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -30,6 +31,7 @@ class ForumApplicationTests {
     }
 
     @Test
+    @Transactional
     void testMybatis() {
         User user=new User();
         user.setId(1l);

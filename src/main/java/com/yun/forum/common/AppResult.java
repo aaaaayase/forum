@@ -1,5 +1,7 @@
 package com.yun.forum.common;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 /**
  * @author yun
  * @date 2024/9/13 18:32
@@ -8,10 +10,13 @@ package com.yun.forum.common;
 public class AppResult<T> {
 
     // 状态码
+    @JsonInclude(JsonInclude.Include.ALWAYS) // 无条件的每次都参加序列化
     private int code;
     // 返回信息
+    @JsonInclude(JsonInclude.Include.ALWAYS)
     private String message;
     // 返回数据
+    @JsonInclude(JsonInclude.Include.ALWAYS)
     private T data;
 
     /**

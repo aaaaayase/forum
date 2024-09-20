@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yun.forum.dao.ArticleMapper">
+    <!--    自定义结果集映射-->
+    <resultMap extends="ResultMapWithBLOBs" id="AllInfoResultMap" type="com.yun.forum.model.Article">
+        <!--        关联用户映射-->
+        <association property="user" columnPrefix="u_" resultMap="com.yun.forum.dao.UserMapper.BaseResultMap"/>
+        <!--        关联版块映射-->
+        <association property="board" columnPrefix="b_" resultMap="com.yun.forum.dao.BoardMapper.BaseResultMap"/>
+    </resultMap>
+
+    <select id="selectAll" resultMap="AllInfoResultMap">
+        select u.id        as u_id,
+               u.avatarUrl as u_avatarUrl,
+               u.nickname  as u_nickname,
+               a.id,
+               a.boardId,
+               a.userId,
+               a.title,
+               a.likeCount,
+               a.replyCount,
+               a.visitCount,
+               a.state,
+               a.createTime,
+               a.updateTime
+        from t_article a,
+             t_user u
+        where a.deleteState = 0
+          and a.userId = u.id
+        order by a.createTime desc limit 0,100
+    </select>
+
+    <select id="selectAllByBoardId" resultMap="AllInfoResultMap" parameterType="java.lang.Long">
+        select u.id        as u_id,
+               u.avatarUrl as u_avatarUrl,
+               u.nickname  as u_nickname,
+               a.id,
+               a.boardId,
+               a.userId,
+               a.title,
+               a.likeCount,
+               a.replyCount,
+               a.visitCount,
+               a.state,
+               a.createTime,
+               a.updateTime
+        from t_article a,
+             t_user u
+        where a.deleteState = 0
+          and a.userId = u.id
+          and a.boardId = #{boardId}
+        order by a.createTime desc limit 0,100
+    </select>
+
+    <select id="selectDetailById" resultMap="AllInfoResultMap" parameterType="java.lang.Long">
+        select u.id          as u_id,
+               u.avatarUrl   as u_avatarUrl,
+               u.nickname    as u_nickname,
+               u.gender      as u_gender,
+               u.isAdmin     as u_isAdmin,
+               u.state       as u_state,
+               u.deleteState as u_deleteState,
+               b.id          as b_id,
+               b.name        as b_name,
+               b.state       as b_state,
+               b.deleteState as b_deleteState,
+               a.id,
+               a.boardId,
+               a.userId,
+               a.title,
+               a.content,
+               a.likeCount,
+               a.replyCount,
+               a.visitCount,
+               a.state,
+               a.createTime,
+               a.updateTime
+        from t_article a,
+             t_user u,
+             t_board b
+        where a.deleteState = 0
+          and a.userId = u.id
+          and a.boardId= b.id
+          and a.id=#{id}
+    </select>
+
+</mapper>

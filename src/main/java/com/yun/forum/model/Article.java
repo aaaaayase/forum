@@ -30,5 +30,11 @@ public class Article {
 
     private String content;
 
+    private boolean isOwn;
 
+    // 关联对象
+    private User user;
+
+    // 关联版块
+    private Board board;
 }

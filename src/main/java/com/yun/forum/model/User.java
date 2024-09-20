@@ -1,5 +1,7 @@
 package com.yun.forum.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.util.Date;
@@ -11,6 +13,8 @@ public class User {
 
     private String username;
 
+    // 该注解表示指定的属性不参与序列化
+    @JsonIgnore
     private String password;
 
     private String nickname;
@@ -21,8 +25,10 @@ public class User {
 
     private Byte gender;
 
+    @JsonIgnore
     private String salt;
 
+    @JsonInclude(JsonInclude.Include.ALWAYS)
     private String avatarUrl;
 
     private Integer articleCount;
@@ -33,6 +39,7 @@ public class User {
 
     private Byte state;
 
+    @JsonIgnore
     private Byte deleteState;
 
     private Date createTime;
