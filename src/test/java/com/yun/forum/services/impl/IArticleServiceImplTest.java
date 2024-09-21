@@ -62,4 +62,11 @@ class IArticleServiceImplTest {
 
         articleService.deleteById(4l);
     }
+
+    @Transactional
+    @Test
+    void addOneReplyCountById() {
+
+        articleService.addOneReplyCountById(4l);
+    }
 }

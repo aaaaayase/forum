@@ -257,4 +257,40 @@ public class IArticleServiceImpl implements IArticleService {
 
         log.info("删除成功");
     }
+
+    @Override
+    public void addOneReplyCountById(Long id) {
+        // 非空校验
+        if (id == null || id <= 0) {
+            log.warn(ResultCode.FAILED_PARAMS_VALIDATE.toString());
+            throw new ApplicationException(AppResult.failed(ResultCode.FAILED_PARAMS_VALIDATE));
+        }
+
+        // 调用DAO 获取对象
+        Article article = articleMapper.selectByPrimaryKey(id);
+        // 校验对象
+        if (article == null || article.getDeleteState() == 1) {
+            log.warn(ResultCode.FAILED_ARTICLE_NOT_EXIST.toString());
+            throw new ApplicationException(AppResult.failed(ResultCode.FAILED_ARTICLE_NOT_EXIST));
+        }
+        // 校验对象状态
+        if (article.getState() == 1) {
+            log.warn(ResultCode.FAILED_ARTICLE_BANNED.toString());
+            throw new ApplicationException(AppResult.failed(ResultCode.FAILED_ARTICLE_BANNED));
+        }
+
+        // 设置更新对象
+        Article articleUpdate = new Article();
+        articleUpdate.setReplyCount(article.getReplyCount() + 1);
+        articleUpdate.setId(article.getId());
+        articleUpdate.setUpdateTime(new Date());
+
+        // 调用DAO来更新帖子回复数
+        int row = articleMapper.updateByPrimaryKeySelective(articleUpdate);
+        // 校验更新是否成功
+        if (row != 1) {
+            log.warn(ResultCode.ERROR_SERVICES.toString());
+            throw new ApplicationException(AppResult.failed(ResultCode.ERROR_SERVICES));
+        }
+    }
 }

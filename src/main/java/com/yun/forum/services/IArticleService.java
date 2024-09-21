@@ -74,4 +74,7 @@ public interface IArticleService {
      */
     @Transactional
     void deleteById(Long id);
+
+    @Transactional
+    void addOneReplyCountById(Long id);
 }
