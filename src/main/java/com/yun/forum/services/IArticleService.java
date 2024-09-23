@@ -1,6 +1,7 @@
 package com.yun.forum.services;
 
 import com.yun.forum.model.Article;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -75,6 +76,19 @@ public interface IArticleService {
     @Transactional
     void deleteById(Long id);
 
+    /**
+     * 帖子回复数加一
+     *
+     * @param id
+     */
     @Transactional
     void addOneReplyCountById(Long id);
+
+    /**
+     * 根据用户id来查找帖子列表
+     *
+     * @param userId
+     * @return
+     */
+    List<Article> selectByUserId(@Param("userId") Long userId);
 }

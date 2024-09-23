@@ -6,6 +6,7 @@ import com.yun.forum.config.AppConfig;
 import com.yun.forum.model.User;
 import com.yun.forum.services.IUserService;
 import com.yun.forum.utils.MD5Utils;
+import com.yun.forum.utils.StringUtils;
 import com.yun.forum.utils.UUIDUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -131,5 +132,88 @@ public class UserController {
 
         // 无论是否有session都返回成功
         return AppResult.success("退出成功");
+    }
+
+    /**
+     * 登录用户更新个人中心的信息
+     *
+     * @param request
+     * @param username
+     * @param nickname
+     * @param gender
+     * @param email
+     * @param phoneNum
+     * @param remark
+     * @return
+     */
+    @PostMapping("/modifyInfo")
+    public AppResult modifyInfo(HttpServletRequest request
+            , @RequestParam(value = "username", required = false) String username
+            , @RequestParam(value = "nickname", required = false) String nickname
+            , @RequestParam(value = "gender", required = false) Byte gender
+            , @RequestParam(value = "email", required = false) String email
+            , @RequestParam(value = "phoneNum", required = false) String phoneNum
+            , @RequestParam(value = "remark", required = false) String remark) {
+        // 非空校验
+        if (StringUtils.isEmpty(username)
+                && StringUtils.isEmpty(nickname)
+                && StringUtils.isEmpty(phoneNum)
+                && StringUtils.isEmpty(remark)
+                && StringUtils.isEmpty(email)
+                && gender == null) {
+            return AppResult.failed("请输入要修改的内容");
+        }
+
+        // 获取session
+        HttpSession session = request.getSession(false);
+        // 获取登录用户
+        User user = (User) session.getAttribute(AppConfig.USER_SESSION);
+
+        // 设置用于更新的对象
+        User userUpdate = new User();
+        userUpdate.setId(user.getId());
+        userUpdate.setUsername(username);
+        userUpdate.setNickname(nickname);
+        userUpdate.setGender(gender);
+        userUpdate.setEmail(email);
+        userUpdate.setPhoneNum(phoneNum);
+        userUpdate.setRemark(remark);
+
+        // 调用service
+        userService.modifyInfo(userUpdate);
+
+        // 查询最新的用户信息
+        user = userService.selectById(user.getId());
+
+        // 把最新的用户信息放入session
+        session.setAttribute(AppConfig.USER_SESSION, user);
+
+        return AppResult.success(user);
+    }
+
+    @PostMapping("/modifyPwd")
+    public AppResult modifyPassword(HttpServletRequest request
+            , @RequestParam("oldPassword") String oldPassword
+            , @RequestParam("newPassword") String newPassword
+            , @RequestParam("passwordRepeat") String passwordRepeat) {
+        // 为什么这里没有进行参数的非空校验 因为在service层会进行校验
+        // 首先验证
+        if (!newPassword.equals(passwordRepeat)) {
+            return AppResult.failed(ResultCode.FAILED_TWO_PWD_NOT_SAME);
+        }
+
+        // 获取登录的对象
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute(AppConfig.USER_SESSION);
+
+        userService.modifyPassword(user.getId(), oldPassword, newPassword);
+
+        // 销毁session
+        if (session != null) {
+            session.invalidate();
+        }
+
+        // 返回结果
+        return AppResult.success();
     }
 }

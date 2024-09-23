@@ -25,10 +25,10 @@ import java.util.List;
 public class IArticleReplyServiceImpl implements IArticleReplyService {
 
     @Autowired
-    ArticleReplyMapper articleReplyMapper;
+    private ArticleReplyMapper articleReplyMapper;
 
     @Autowired
-    IArticleService articleService;
+    private IArticleService articleService;
 
     @Override
     public void create(ArticleReply articleReply) {

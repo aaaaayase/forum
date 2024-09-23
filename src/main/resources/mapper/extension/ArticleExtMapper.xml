@@ -84,4 +84,26 @@
           and a.id=#{id}
     </select>
 
+<!--    根据用户id查询帖子列表-->
+    <select id="selectByUserId" parameterType="java.lang.Long" resultMap="AllInfoResultMap">
+        select b.id   as b_id,
+               b.name as b_name,
+               a.id,
+               a.boardId,
+               a.userId,
+               a.title,
+               a.visitCount,
+               a.replyCount,
+               a.likeCount,
+               a.state,
+               a.createTime,
+               a.updateTime
+        from t_board b,
+             t_article a
+        where a.boardId = b.id
+          and a.deleteState = 0
+          and a.userId = #{userId}
+        order by a.createTime desc
+    </select>
+
 </mapper>

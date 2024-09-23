@@ -30,9 +30,9 @@ import java.util.List;
 public class ArticleController {
 
     @Autowired
-    IBoardService boardService;
+    private IBoardService boardService;
     @Autowired
-    IArticleService articleService;
+    private IArticleService articleService;
 
     @PostMapping("/create")
     public AppResult create(HttpServletRequest request,
@@ -180,5 +180,19 @@ public class ArticleController {
         articleService.deleteById(id);
 
         return AppResult.success();
+    }
+
+    @GetMapping("/getAllByUserId")
+    public AppResult getAllByUserId(HttpServletRequest request, @RequestParam(value = "userId", required = false) Long userId) {
+        if (userId == null) {
+            // 此时点击的是登录的对象
+            // 获取登录的对象
+            HttpSession session = request.getSession(false);
+            User user = (User) session.getAttribute(AppConfig.USER_SESSION);
+            userId = user.getId();
+        }
+        // 如果传入的userid有值 那么此时点击的就不是右上角的个人头像框
+        List<Article> articles = articleService.selectByUserId(userId);
+        return AppResult.success(articles);
     }
 }

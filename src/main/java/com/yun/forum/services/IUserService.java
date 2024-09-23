@@ -55,4 +55,20 @@ public interface IUserService {
      * @return
      */
     void subOneArticleCountById(Long id);
+
+    /**
+     * 修改用户个人信息
+     *
+     * @param user
+     */
+    void modifyInfo(User user);
+
+    /**
+     * 修改密码
+     *
+     * @param id
+     * @param oldPassword
+     * @param newPassword
+     */
+    void modifyPassword(Long id, String oldPassword, String newPassword);
 }

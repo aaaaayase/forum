@@ -4,7 +4,7 @@
     <resultMap id="AllInfoResultMap" type="com.yun.forum.model.ArticleReply" extends="BaseResultMap">
       <association property="user" resultMap="com.yun.forum.dao.UserMapper.BaseResultMap" columnPrefix="u_"></association>
     </resultMap>
-    
+
     <select id="selectByArticleId" resultMap="AllInfoResultMap" parameterType="java.lang.Long">
         select u.id        as u_id,
                u.avatarUrl as u_avatarUrl,
@@ -26,4 +26,6 @@
           and ar.articleId = #{articleId}
         order by ar.createTime desc
     </select>
+
+
 </mapper>

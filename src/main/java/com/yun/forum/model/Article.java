@@ -30,7 +30,7 @@ public class Article {
 
     private String content;
 
-    private boolean isOwn;
+    private Boolean Own;
 
     // 关联对象
     private User user;

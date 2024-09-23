@@ -29,13 +29,13 @@ import java.util.List;
 public class IArticleServiceImpl implements IArticleService {
 
     @Autowired
-    ArticleMapper articleMapper;
+    private ArticleMapper articleMapper;
 
     @Autowired
-    IUserService userService;
+    private IUserService userService;
 
     @Autowired
-    IBoardService boardService;
+    private IBoardService boardService;
 
     @Override
     public void create(Article article) {
@@ -292,5 +292,30 @@ public class IArticleServiceImpl implements IArticleService {
             log.warn(ResultCode.ERROR_SERVICES.toString());
             throw new ApplicationException(AppResult.failed(ResultCode.ERROR_SERVICES));
         }
+    }
+
+    @Override
+    public List<Article> selectByUserId(Long userId) {
+        // 非空校验
+        if (userId == null || userId <= 0) {
+            log.warn(ResultCode.FAILED_PARAMS_VALIDATE.toString());
+            throw new ApplicationException(AppResult.failed(ResultCode.FAILED_PARAMS_VALIDATE));
+        }
+
+        // 查找相应用户来确定用户状态
+        User user = userService.selectById(userId);
+        if (user == null || user.getDeleteState() == 1) {
+            log.warn(ResultCode.FAILED_USER_NOT_EXISTS.toString());
+            throw new ApplicationException(AppResult.failed(ResultCode.FAILED_USER_NOT_EXISTS));
+        }
+        if (user.getState() == 1) {
+            log.warn(ResultCode.FAILED_USER_BANNED.toString());
+            throw new ApplicationException(AppResult.failed(ResultCode.FAILED_USER_BANNED));
+        }
+
+        // 调用DAO 查找相应的帖子或帖子列表
+        List<Article> articles = articleMapper.selectByUserId(userId);
+
+        return articles;
     }
 }

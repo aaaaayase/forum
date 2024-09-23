@@ -8,6 +8,7 @@ import com.yun.forum.model.User;
 import com.yun.forum.services.IUserService;
 import com.yun.forum.utils.MD5Utils;
 import com.yun.forum.utils.StringUtils;
+import com.yun.forum.utils.UUIDUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -171,6 +172,131 @@ public class IUserServiceImpl implements IUserService {
 
         // 调用DAO更新
         int row = userMapper.updateByPrimaryKeySelective(userUpdate);
+        if (row != 1) {
+            log.warn(ResultCode.FAILED.toString());
+            throw new ApplicationException(AppResult.failed(ResultCode.FAILED));
+        }
+
+    }
+
+    @Override
+    public void modifyInfo(User user) {
+        // 非空校验
+        if (user == null || user.getId() <= 0 || user.getId() == null) {
+            log.warn(ResultCode.FAILED_PARAMS_VALIDATE.toString());
+            throw new ApplicationException(AppResult.failed(ResultCode.FAILED_PARAMS_VALIDATE));
+        }
+
+        // 根据id查找是否有这样的用户
+        User userExist = userMapper.selectByPrimaryKey(user.getId());
+        // 校验
+        if (userExist == null) {
+            log.warn(ResultCode.FAILED_USER_NOT_EXISTS.toString());
+            throw new ApplicationException(AppResult.failed(ResultCode.FAILED_USER_NOT_EXISTS));
+        }
+
+        // 设置用于更新的新对象
+        User userUpdate = new User();
+        userUpdate.setId(user.getId());
+
+        // 设置标志位 标记用于更新的对象是否被设置新值 也就是说用户信息是否被更新
+        boolean flg = false;
+
+        // 校验 改变的用户名不能为空 并且必须和之前的用户名不一样 以及不能和数据库中的已有的用户名重名
+        if (!StringUtils.isEmpty(user.getUsername())
+                && !user.getUsername().equals(userExist.getUsername())) {
+            User userCheck = userMapper.selectByUserName(user.getUsername());
+            if (userCheck != null) {
+                log.warn(ResultCode.FAILED_USER_EXISTS.toString());
+                throw new ApplicationException(AppResult.failed(ResultCode.FAILED_USER_EXISTS));
+            }
+            userUpdate.setUsername(user.getUsername());
+            flg = true;
+        }
+
+        if (!StringUtils.isEmpty(user.getNickname())
+                && !user.getNickname().equals(userExist.getNickname())) {
+            userUpdate.setNickname(user.getNickname());
+            flg = true;
+        }
+
+        if (user.getGender() != null && user.getGender() != userExist.getGender()) {
+            userUpdate.setGender(user.getGender());
+            if (userUpdate.getGender() > 2 || userUpdate.getGender() < 0) {
+                userUpdate.setGender((byte) 2);
+            }
+            flg = true;
+        }
+
+        if (!StringUtils.isEmpty(user.getEmail())
+                && !user.getEmail().equals(userExist.getEmail())) {
+            userUpdate.setEmail(user.getEmail());
+            flg = true;
+        }
+
+        if (!StringUtils.isEmpty(user.getPhoneNum())
+                && !user.getPhoneNum().equals(userExist.getPhoneNum())) {
+            userUpdate.setPhoneNum(user.getPhoneNum());
+            flg = true;
+        }
+
+        if (!StringUtils.isEmpty(user.getRemark())
+                && !user.getRemark().equals(userExist.getRemark())) {
+            userUpdate.setRemark(user.getRemark());
+            flg = true;
+        }
+
+        if (flg == false) {
+            log.warn(ResultCode.FAILED_PARAMS_VALIDATE.toString());
+            throw new ApplicationException(AppResult.failed(ResultCode.FAILED_PARAMS_VALIDATE));
+        }
+
+        int row = userMapper.updateByPrimaryKeySelective(userUpdate);
+        if (row != 1) {
+            log.warn(ResultCode.FAILED.toString());
+            throw new ApplicationException(AppResult.failed(ResultCode.FAILED));
+        }
+
+
+    }
+
+    @Override
+    public void modifyPassword(Long id, String oldPassword, String newPassword) {
+        // 非空校验
+        if (id == null || id <= 0 || StringUtils.isEmpty(oldPassword) || StringUtils.isEmpty(newPassword)) {
+            log.warn(ResultCode.FAILED_PARAMS_VALIDATE.toString());
+            throw new ApplicationException(AppResult.failed(ResultCode.FAILED_PARAMS_VALIDATE));
+        }
+
+        User user = userMapper.selectByPrimaryKey(id);
+        // 校验用户是否存在
+        if (user == null || user.getDeleteState() == 1) {
+            log.warn(ResultCode.FAILED_USER_NOT_EXISTS.toString());
+            throw new ApplicationException(AppResult.failed(ResultCode.FAILED_USER_NOT_EXISTS));
+        }
+
+        // 验证输入的密码是否正确
+        String oldSecret = MD5Utils.md5Salt(oldPassword, user.getSalt());
+        if (!oldSecret.equalsIgnoreCase(user.getPassword())) {
+            log.warn(ResultCode.FAILED.toString());
+            throw new ApplicationException(AppResult.failed(ResultCode.FAILED));
+        }
+
+
+        // 构造用于更新的用户对象
+        User userUpdate = new User();
+        userUpdate.setId(user.getId());
+        // 获取新的盐值
+        String salt = UUIDUtils.UUID_32();
+        String newSecret = MD5Utils.md5Salt(newPassword, salt);
+        userUpdate.setPassword(newSecret);
+        userUpdate.setSalt(salt);
+        Date date = new Date();
+        userUpdate.setUpdateTime(date);
+
+        // 调用DAO
+        int row = userMapper.updateByPrimaryKeySelective(userUpdate);
+        // 校验
         if (row != 1) {
             log.warn(ResultCode.FAILED.toString());
             throw new ApplicationException(AppResult.failed(ResultCode.FAILED));

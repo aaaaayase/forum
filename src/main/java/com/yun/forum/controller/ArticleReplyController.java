@@ -28,10 +28,10 @@ import java.util.List;
 public class ArticleReplyController {
 
     @Autowired
-    IArticleReplyService articleReplyService;
+    private IArticleReplyService articleReplyService;
 
     @Autowired
-    IArticleService articleService;
+    private IArticleService articleService;
 
     @PostMapping("/create")
     public AppResult create(HttpServletRequest request

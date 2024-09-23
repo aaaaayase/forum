@@ -89,7 +89,7 @@
     --tblr-teal-rgb: 12, 166, 120;
     --tblr-cyan-rgb: 23, 162, 184;
     --tblr-facebook-rgb: 24, 119, 242;
-    --tblr-twitter-rgb: 29, 161, 242;
+    --tblr-twitter-rgb: 0, 0, 0;
     --tblr-linkedin-rgb: 10, 102, 194;
     --tblr-google-rgb: 220, 78, 65;
     --tblr-youtube-rgb: 255, 0, 0;
@@ -15360,7 +15360,7 @@ textarea.form-control-lg {
     --tblr-twitter: #1da1f2;
     --tblr-twitter-fg: var(--tblr-light);
     --tblr-twitter-darken: #1a91da;
-    --tblr-twitter-rgb: 29, 161, 242;
+    --tblr-twitter-rgb: 0, 0, 0;
     --tblr-linkedin: #0a66c2;
     --tblr-linkedin-fg: var(--tblr-light);
     --tblr-linkedin-darken: #095caf;
