@@ -22,4 +22,7 @@ public class Message {
 
     private Date updateTime;
 
+    // 关联发私信者对象
+    private User postUser;
+
 }

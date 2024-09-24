@@ -203,7 +203,7 @@ public class UserController {
         }
 
         // 获取登录的对象
-        HttpSession session = request.getSession();
+        HttpSession session = request.getSession(false);
         User user = (User) session.getAttribute(AppConfig.USER_SESSION);
 
         userService.modifyPassword(user.getId(), oldPassword, newPassword);

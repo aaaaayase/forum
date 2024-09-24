@@ -39,6 +39,8 @@ public enum ResultCode {
 
     FAILED_ARTICLE_BANNED(1302, "帖子已被禁"),
 
+    FAILED_MESSAGE_NOT_EXIST(1401, "站内信不存在"),
+
     ERROR_SERVICES(2000, "服务器内部错误"),
 
     ERROR_IS_NULL(2001, "IS NULL");

@@ -38,7 +38,7 @@ public class ArticleReplyController {
             , @RequestParam("content") @NonNull String content
             , @RequestParam("articleId") @NonNull Long articleId) {
         // 获取登录对象
-        HttpSession session = request.getSession();
+        HttpSession session = request.getSession(false);
         User user = (User) session.getAttribute(AppConfig.USER_SESSION);
         // 判断用户是否被禁言
         if (user.getState() == 1) {
