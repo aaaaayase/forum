@@ -23,8 +23,8 @@ create table t_user(
     remark varchar(100) comment '备注，自我介绍',
     state tinyint not null default 0 comment '状态：0正常 1禁用',
     deleteState tinyint not null default 0 comment '是否删除：0否 1是',
-    createTime dateTime not null comment '创建时间，精确到秒',
-    updateTime dateTime not null comment '更新时间，精确到秒'
+    createTime dateTime not null default now() on update now() comment '创建时间，精确到秒',
+    updateTime dateTime not null default now() on update now() comment '更新时间，精确到秒'
 ); 
 
 # 创建版块表
@@ -36,8 +36,8 @@ create table t_board(
     sort int not null default 0 comment '排序优先级，升序',
     state tinyint not null default 0 comment '状态：0正常 1禁用',
     deleteState tinyint not null default 0 comment '是否删除：0否 1是',
-    createTime dateTime not null comment '创建时间，精确到秒',
-    updateTime dateTime not null comment '更新时间，精确到秒'
+    createTime dateTime not null default now() on update now() comment '创建时间，精确到秒',
+    updateTime dateTime not null default now() on update now() comment '更新时间，精确到秒'
 ); 
 
 # 创建帖子表
@@ -53,8 +53,8 @@ create table t_article(
     likeCount int not null default 0 comment '点赞数',
     state tinyint not null default 0 comment '状态：0正常 1禁用',
     deleteState tinyint not null default 0 comment '是否删除：0否 1是',
-    createTime dateTime not null comment '创建时间，精确到秒',
-    updateTime dateTime not null comment '更新时间，精确到秒'
+    createTime dateTime not null default now() on update now() comment '创建时间，精确到秒',
+    updateTime dateTime not null default now() on update now() comment '更新时间，精确到秒'
 ); 
 
 # 创建帖子回复表
@@ -69,8 +69,8 @@ create table t_article_reply(
     likeCount int not null default 0 comment '点赞数', 
     state tinyint not null default 0 comment '状态：0正常 1禁用',
     deleteState tinyint not null default 0 comment '是否删除：0否 1是',
-    createTime dateTime not null comment '创建时间，精确到秒',
-    updateTime dateTime not null comment '更新时间，精确到秒'
+    createTime dateTime not null default now() on update now() comment '创建时间，精确到秒',
+    updateTime dateTime not null default now() on update now() comment '更新时间，精确到秒'
 ); 
 
 # 创建站内信表
@@ -82,6 +82,6 @@ create table t_message(
     content varchar(250) not null comment '内容',
     state tinyint not null default 0 comment '状态：0正常 1禁用',
     deleteState tinyint not null default 0 comment '是否删除：0否 1是',
-    createTime dateTime not null comment '创建时间，精确到秒',
-    updateTime dateTime not null comment '更新时间，精确到秒'
+    createTime dateTime not null default now() on update now() comment '创建时间，精确到秒',
+    updateTime dateTime not null default now() on update now() comment '更新时间，精确到秒'
 ); 
